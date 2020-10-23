@@ -1,0 +1,40 @@
+Syncing database with ZohoCRM API.....
+****************************************
+Fetching devices from ZohoCRM API.....
+****************************************
+zcrmsdk\crm\crud\ZCRMModule {#1014
+  -convertable: null
+  -creatable: null
+  -editable: null
+  -deletable: null
+  -webLink: null
+  -singularLabel: null
+  -pluralLabel: null
+  -modifiedBy: null
+  -modifiedTime: null
+  -viewable: null
+  -apiSupported: null
+  -customModule: null
+  -scoringSupported: null
+  -id: null
+  -moduleName: null
+  -businessCardFieldLimit: null
+  -apiName: "Products_Sold"
+  -businessCardFields: []
+  -profiles: []
+  -displayFieldName: null
+  -displayFieldId: null
+  -relatedList: null
+  -layouts: null
+  -fields: null
+  -relatedListProperties: null
+  -properties: null
+  -perPage: null
+  -searchLayoutFields: null
+  -defaultTerritoryName: null
+  -defaultTerritoryId: null
+  -defaultCustomViewId: null
+  -customView: null
+  -globalSearchSupported: null
+  -sequenceNumber: null
+}

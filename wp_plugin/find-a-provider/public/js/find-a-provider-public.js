@@ -1,0 +1,545 @@
+Selectize.define( 'clear_selection', function ( options ) {
+    var self = this;
+
+    self.plugins.settings.dropdown_header = {
+        title: 'Any device'
+    };
+    this.require( 'dropdown_header' );
+
+    self.setup = (function () {
+        var original = self.setup;
+
+        return function () {
+            original.apply( this, arguments );
+            this.$dropdown.on( 'mousedown', '.selectize-dropdown-header', function ( e ) {
+                self.setValue( '' );
+                self.close();
+                self.blur();
+
+                return false;
+            });
+        }
+    })();
+});
+
+
+(function($) {
+      'use strict';
+
+      var STM_MAP = {};
+      MAP_VARS.first = true;
+      MAP_VARS.clientIP = false;
+      MAP_VARS.initialized = false;
+      MAP_VARS.autocomplete = false;
+      MAP_VARS.searchAddr = 'all';
+      MAP_VARS.defaultCenter = { lat: 39.8333333, lng: -98.585522 };
+      MAP_VARS.deviceSelect = false;
+      MAP_VARS.locations = [];
+      MAP_VARS.pageList = [];
+      MAP_VARS.currentPage = 1;
+      MAP_VARS.totalPages = 0;
+      MAP_VARS.numberPerPage = 5;
+      var alerted = false;
+      setTimeout(function() {
+         if (!MAP_VARS.initialized) {
+            STM_MAP.initMap()
+         }
+      }, 2500);
+
+      STM_MAP.initMap = function() {
+         MAP_VARS.initialized = true;
+         MAP_VARS.map = new google.maps.Map(document.getElementById('storepoint-map-container'), {
+            center: MAP_VARS.defaultCenter,
+            maxZoom: 18,
+            scrollwheel: !1,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapTypeControl: !1,
+            streetViewControl: !1,
+            zoomControl: !0,
+            styles: [{
+              featureType: "administrative.land_parcel",
+              elementType: "all",
+              stylers: [{
+                  visibility: "off"
+              }]
+            }, {
+              featureType: "landscape.man_made",
+              elementType: "all",
+              stylers: [{
+                  visibility: "off"
+              }]
+            }, {
+              featureType: "poi",
+              elementType: "labels",
+              stylers: [{
+                  visibility: "off"
+              }]
+            }, {
+              featureType: "road",
+              elementType: "labels",
+              stylers: [{
+                  visibility: "simplified"
+              }, {
+                  lightness: 20
+              }]
+            }, {
+              featureType: "road.highway",
+              elementType: "geometry",
+              stylers: [{
+                  hue: "#f49935"
+              }]
+            }, {
+              featureType: "road.highway",
+              elementType: "labels",
+              stylers: [{
+                  visibility: "simplified"
+              }]
+            }, {
+              featureType: "road.arterial",
+              elementType: "geometry",
+              stylers: [{
+                  hue: "#fad959"
+              }]
+            }, {
+              featureType: "road.arterial",
+              elementType: "labels",
+              stylers: [{
+                  visibility: "off"
+              }]
+            }, {
+              featureType: "road.local",
+              elementType: "geometry",
+              stylers: [{
+                  visibility: "simplified"
+              }]
+            }, {
+              featureType: "road.local",
+              elementType: "labels",
+              stylers: [{
+                  visibility: "simplified"
+              }]
+            }, {
+              featureType: "transit",
+              elementType: "all",
+              stylers: [{
+                  visibility: "off"
+              }]
+            }, {
+              featureType: "water",
+              elementType: "all",
+              stylers: [{
+                  hue: "#a1cdfc"
+              }, {
+                  saturation: 30
+              }, {
+                  lightness: 49
+              }]
+            }]
+         });
+         getFilters();
+         MAP_VARS.infoWindow = new google.maps.InfoWindow();
+         //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-addressform
+         MAP_VARS.autocomplete = new google.maps.places.Autocomplete((document.getElementById('storepoint-searchbar')), { types: ['geocode'] });
+         MAP_VARS.autocomplete.setFields(['address_component', 'geometry']);
+         google.maps.event.addListener(MAP_VARS.autocomplete, 'place_changed', function () {
+            var geometry = MAP_VARS.autocomplete.getPlace().geometry.location;
+            MAP_VARS.searchAddr = geometry;
+            MAP_VARS.map.setCenter(geometry);
+            MAP_VARS.map.setZoom(10);
+            searchLocationsNear(geometry);
+         });
+         STM_MAP.setStart();
+      }
+      STM_MAP.setStart = function() {
+         var search = '';
+         var sb = document.getElementById('storepoint-searchbar');
+         sb.setAttribute('readonly', true);
+         if (Cookies.get('searchAddress')) {
+            search = Cookies.get('searchAddress');
+            sb.value = search;
+            jQuery('#storepoint-searchbar').prop('readonly',null);
+            geocode(search);
+            return;
+         }
+         jQuery.getJSON("https://api.ipify.org/?format=json").then(function(json) {
+            if (!json && !json.ip) return false;
+            return json.ip;
+         }).then(function(ip) {
+            MAP_VARS.clientIP = ip;
+            jQuery.getJSON("https://freegeoip.live/json/"+ip).then(function(result) {
+               if (result && result.city) {
+                  search += result.city;
+               } else if (result && result.zip_code) {
+                  search += result.zip_code;
+               }
+               if (result && result.region_code) {
+                  search += ', ' + result.region_code;
+               }
+               if (result && result.country_code) {
+                  search += ' ' + result.country_code;
+               }
+               sb.value = search;
+               Cookies.set('searchAddress', search);
+               jQuery('#storepoint-searchbar').prop('readonly',null);
+               geocode(search);
+            });
+         })
+      }
+
+      function clearLocations() {
+         MAP_VARS.infoWindow.close();
+         for (var i = 0; i < MAP_VARS.markers.length; i++) {
+            MAP_VARS.markers[i].setMap(null);
+         }
+         MAP_VARS.markers.length = 0;
+      }
+
+      function getFilters() {
+         buildFilters();
+         return;
+         var searchUrl = MAP_VARS.apiURL + 'tags';
+         downloadUrl(searchUrl, function(data) {
+            buildFilters();
+         });
+      }
+      function buildFilters() {
+         var radiuses = [{
+               id: 50,
+               text: '50 mi',
+            },
+            {
+               id: 30,
+               text: '30 mi',
+            }];
+
+         var devices = [{
+               id: 'virtue-rf',
+               text: 'VirtueRF Microneedling',
+               index: 1,
+            },
+            {
+               id: 'tetra-co2-and-coolpeel',
+               text: 'Coolpeel / Tetra CO2',
+               index: 2,
+            },
+            {
+               id: 'motus-ax-ay',
+               text: 'MotusAX/AY Laser Hair Removal',
+               index: 3,
+            },
+            {
+               id: 'luxea',
+               text: 'Luxea',
+               index: 4,
+            },
+            {
+               id: 'subnovii',
+               text: 'Subnovii Plasma Technology',
+               index: 5,
+            },
+            {
+               id: 'skinwave',
+               text: 'Skinwave',
+               index: 6,
+            },
+            {
+               id: 'discovery-pico',
+               text: 'Discovery Pico for Tattoo Removal',
+               index: 7,
+            },
+            {
+               id: 'evo-series',
+               text: 'EVO Series',
+               index: 8,
+            },
+            {
+               id: 'physiq',
+               text: 'Physiq Body Treatment',
+               index: 9,
+            },
+            {
+               id: 'denave',
+               text: 'Denave for Vascular/Rosacea',
+               index: 10,
+            },
+            {
+               id: 'v-lase',
+               text: 'V-Lase for Feminine Wellness',
+               index: 11,
+            },
+            {
+               id: 'rf-microneedling',
+               text: 'RF Microneedling',
+               index: 12,
+            }];
+
+         var select = jQuery('#storepoint-tag-dropdown');
+         var radiusSelect = jQuery('#radiusSelect').selectize({
+            allowClear: true,
+            placeholder: "Select an radius",
+            create: false,
+            options: radiuses,
+            valueField: "id",
+            labelField: "text",
+            searchField : ['text'],
+            onChange: function onChange(value) {
+               if (MAP_VARS.first) return;
+               searchLocationsNear(MAP_VARS.searchAddr);
+            },
+         }).css('visibility', 'visible');
+
+         MAP_VARS.deviceSelect = jQuery('#storepoint-tag-dropdown').selectize({
+            allowClear: true,
+            placeholder: "Select an device",
+            create: false,
+            options: devices,
+            allowEmptyOption: true,
+            valueField: "id",
+            labelField: "text",
+            sortField: {
+               field: 'index',
+               direction: 'asc'
+            },
+            plugins: ['clear_selection'],
+            onChange: function onChange(tag) {
+               if (tag != '') {
+                  searchLocationsNear(MAP_VARS.searchAddr);
+               }
+            },
+            score: function() {
+               return function(search) {
+                  return 1;
+               }
+            }
+         }).css('visibility', 'visible');
+
+         var selectize = radiusSelect[0].selectize
+         selectize.setValue(50);
+         MAP_VARS.first = false;
+      }
+
+      function clearDropdown() {
+         var selectize = MAP_VARS.deviceSelect[0].selectize;
+         selectize.setValue(null);
+      }
+
+      function searchTaggedLocationsNear(tag) {
+         var center = MAP_VARS.searchAddr;
+         clearLocations();
+         if ('all' == center) {
+            var searchUrl = MAP_VARS.apiURL + 'all?tag='+tag;
+         } else {
+            var radius = document.getElementById('radiusSelect').value;
+            var searchUrl = MAP_VARS.apiURL + 'search?tag=' + tag + '&lat=' + center.lat() + '&lng=' + center.lng() + '&radius=' + radius;
+         }
+         downloadUrl(searchUrl, function(data) {
+            build_markers(data);
+         });
+      }
+
+      function searchLocationsNear(center) {
+         clearLocations();
+         if ('all' == center) {
+            var searchUrl = MAP_VARS.apiURL + 'all';
+         } else {
+            var radius = document.getElementById('radiusSelect').value;
+            if (typeof center.lat != 'function') {
+               var initialLocation = new google.maps.LatLng(center.lat, center.lng);
+               var geolocation = {
+                  lat: center.lat,
+                  lng: center.lng,
+               };
+               MAP_VARS.searchAddr = geolocation;
+               var circle = new google.maps.Circle({center: geolocation});
+               MAP_VARS.autocomplete.setBounds(circle.getBounds());
+               center = circle.getCenter();
+            }
+            var searchUrl = MAP_VARS.apiURL + 'search?lat=' + center.lat() + '&lng=' + center.lng() + '&radius=' + radius;
+         }
+         var tag = MAP_VARS.deviceSelect.val();
+         if (tag != '' && tag != null) {
+            searchUrl += (searchUrl.indexOf('?') == -1) ? '?' : '&';
+            searchUrl += 'tag='+tag;
+         }
+         downloadUrl(searchUrl, function(data) {
+            build_markers(data);
+         });
+      }
+
+      function buildMarkers(json) {
+         if (!json || !json.length) {
+            if (alerted) return;
+            alert("We’re sorry there are no practices that match that criteria.");
+            clearDropdown();
+            jQuery(".refreshLoc-1,.refreshLoc-2").remove();
+            alerted = true;
+            return false;
+         }
+         var bounds = new google.maps.LatLngBounds();
+         var container = jQuery("#storepoint-results");
+         if (0 >= json.length) {
+            MAP_VARS.map.setZoom(10);
+            return;
+         } else {
+            container.empty();
+            clearLocations();
+            if (!jQuery(".refreshLoc-1").length) {
+               refreshLink(1)
+            }
+         }
+         for (var i = 0; i < json.length; i++) {
+            var id = json[i].id;
+            var name = json[i].name;
+            var address = json[i].formatted_address;
+            var distance = parseFloat(json[i].distance);
+            var latlng = new google.maps.LatLng(parseFloat(json[i].lat), parseFloat(json[i].lng));
+            createLocation(json[i], distance, i);
+            createMarker(latlng, name, address, json[i]);
+            bounds.extend(latlng);
+            jQuery('div#location_'+i).data('id', i);
+            jQuery('#storepoint-results').on('click', 'div#location_'+i, function(e) {
+               var id = jQuery(this).data('id');
+               google.maps.event.trigger(MAP_VARS.markers[id], 'click');
+            });
+
+         }
+         if (0 >= json.length) return;
+         MAP_VARS.map.fitBounds(bounds);
+         if (1 == json.length) {
+            MAP_VARS.map.setZoom(10);
+         }
+         refreshLink(2);
+      }
+
+      function createMarker(latlng, name, address, json) {
+         var phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+         var phone = (json.phone) ? json.phone : '';
+         var website = (json.website) ? json.website : '';
+         var html = '<b>'+name+'</b>';
+         if (json.tagged) {
+            var leng = json.tagged.length
+            for (var i = 0; i < leng; i++) {
+               var tag = json.tagged[i];
+               html += '<span class="tag device:'+tag.tag_slug+'">'+tag.tag_name+'</span>';
+            }
+         }
+         html += '<p class="street-address">'+address+'</p>';
+         if(new String(phone).match(phoneno)) {
+            phone = phone.replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)-$2-$3');
+            html += '<a class="storepoint-popup-phone" href="tel:'+phone+'">'+phone+'</a>';
+         }
+         if (website) {
+            var url = new String(website).replace('https://', '');
+            html += '<div><a class="stpt_website_button storepoint-popup-directions" target="_blank" href="'+website+'">Visit Website</a></div>';
+         }
+
+         var marker = new google.maps.Marker({
+            map: MAP_VARS.map,
+            position: latlng
+         });
+         var infoWindowContent = document.createElement("div");
+         infoWindowContent.className = "storepoint-location-popup";
+         infoWindowContent.style.maxWidth = "300px";
+         infoWindowContent.style.margin = "10px";
+         infoWindowContent.innerHTML = html;
+
+         google.maps.event.addListener(marker, 'click', function() {
+            MAP_VARS.infoWindow.setContent(infoWindowContent);
+            MAP_VARS.infoWindow.open(MAP_VARS.map, marker);
+         });
+         MAP_VARS.markers.push(marker);
+      }
+
+      function createLocation(row, distance, num) {
+         var name = row.name;
+         var address = row.formatted_address;
+         var website = row.website;
+         var phone = row.phone;
+         var html = '<div class="storepoint-location" id="location_'+num+'">' +
+                    '<div class="storepoint-name">'+name+'</div>' +
+                    '<div class="storepoint-address">'+address+'</div>';
+
+
+         var phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+         if (website) {
+            html = html + '<div class="storepoint-contact"><a target="_blank" class="storepoint-sidebar-phone storepoint-sidebar-website" href="'+website+'">'+website+'</a></div>';
+         }
+         if(new String(phone).match(phoneno)) {
+            phone = phone.replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, '($1)-$2-$3');
+            html = html +'<div class="storepoint-contact"><a class="storepoint-sidebar-phone" href="tel:'+phone+'">'+phone+'</a></div>';
+         }
+         if (website) {
+            html = html +'<div class="storepoint-btn storepoint-website-btn"><a class="storepoint-btn" target="_blank" href="'+website+'">Visit Website</a></div>';
+         }
+         if (!isNaN(distance)) {
+            distance = parseFloat(distance).toFixed(1);
+            distance = distance.replace(/\.0$/, '');
+            html = html + '<div class="storepoint-distance">'+distance+' miles</div>';
+         }
+         html = html + '</div>';
+         var container = jQuery("#storepoint-results");
+         jQuery(container).append(html);
+      }
+
+      function refreshLink(num) {
+         var html = '<a href="#" class="refreshLoc-'+num+'">Refresh now to view 5 more practices near you</a>';
+         var container = jQuery("#storepoint-results");
+         jQuery(container).append(html);
+      }
+      function getNumberOfPages() {
+          return Math.ceil(MAP_VARS.list.length / MAP_VARS.numberPerPage);
+      }
+      function nextPage() {
+          MAP_VARS.currentPage += 1;
+          build_markers();
+      }
+      function clickNext(e) {
+         e.preventDefault();
+         nextPage();
+         return false;
+      }
+      function build_markers(data) {
+         var begin = ((MAP_VARS.currentPage - 1) * MAP_VARS.numberPerPage);
+         var end = begin + MAP_VARS.numberPerPage;
+         console.log(begin,end);
+         MAP_VARS.pageList = MAP_VARS.list.slice(begin, end);
+         jQuery( ".refreshLoc-2" ).remove();
+         buildMarkers(MAP_VARS.pageList);
+         jQuery( "#storepoint-results" ).off( "click", ".refreshLoc-1,.refreshLoc-2", clickNext);
+         jQuery( "#storepoint-results" ).on( "click", ".refreshLoc-1,.refreshLoc-2", clickNext);
+
+      }
+      var ajaxLoading = false;
+      function geocode(address) {
+         var geocoder = new google.maps.Geocoder();
+         geocoder.geocode({ address }, function(data, status) {
+            if (status != 'OK') return;
+            var geometry = data[0].geometry.location;
+            MAP_VARS.searchAddr = geometry;
+            MAP_VARS.map.setCenter(geometry);
+            MAP_VARS.map.setZoom(10);
+            searchLocationsNear(geometry);
+         });
+      }
+
+
+      function downloadUrl(url, callback) {
+         console.log(ajaxLoading);
+         if(!ajaxLoading) {
+            jQuery.getJSON(url, function(data, textStatus, jqxhr) {
+               ajaxLoading = false;
+               var container = jQuery("#storepoint-results");
+               container.empty();
+               alerted = false;
+               MAP_VARS.currentPage = 1;
+               MAP_VARS.list = data;
+               MAP_VARS.totalPages = getNumberOfPages();
+
+               callback(data, jqxhr.status);
+            });
+         }
+      }
+
+      function doNothing() {}
+
+})(jQuery);

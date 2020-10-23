@@ -31,3 +31,4 @@ class AccountsAddPhone extends Migration
         });
     }
 }
+

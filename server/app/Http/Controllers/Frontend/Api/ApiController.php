@@ -135,12 +135,11 @@ class ApiController extends Controller
 
     public function download(Request $request)
     {
+        $csv = 'Account, Device Name, Training Date, Street, City, State, Zipcode, Country, Lat, Lng' . PHP_EOL;
+        $csv = 'Account, Device Name, Training Date, Formatted Address, Street, City, State, Zipcode, Country, Lat, Lng' . PHP_EOL;
         $auth = $request->get('auth', false);
 
         if (!$auth OR $auth != 'erin gobragh') die('no access');
-
-        $csv = 'Account, Device Name, Training Date, Street, City, State, Zipcode, Country, Lat, Lng' . PHP_EOL;
-        $csv = 'Account, Device Name, Training Date, Formatted Address, Street, City, State, Zipcode, Country, Lat, Lng' . PHP_EOL;
 
         $accounts = Accounts::complete()->with('tagged')->get()->toArray();
 //        $accounts = Accounts::complete()->with('tagged')->get();
@@ -170,3 +169,4 @@ class ApiController extends Controller
     }
 
 }
+

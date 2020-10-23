@@ -30,3 +30,4 @@ class AlterAccountsAddTrainingdate extends Migration
         });
     }
 }
+

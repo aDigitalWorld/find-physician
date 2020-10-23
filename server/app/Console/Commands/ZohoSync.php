@@ -287,15 +287,15 @@ class ZohoSync extends Command
         $padding->label('Skipped')->result($skipped);
 
         $time_elapsed_secs = microtime(true) - $start;
-        $time_elapsed_secs = $this->elapsed($time_elapsed_secs);
         $padding->label('Time Completed in')->result($time_elapsed_secs);
+
         $subject = 'ZohoSync completed at Cartessa';
         $message = "
         <h2>Syncing data complete</h2><p>
         Created {$new}<br>
         Updated {$updates}<br>
         Skipped {$skipped}<br></p>
-        <p>Completed in {$time_elapsed_secs}</p>";
+        <p>Completed in {$time_elapsed_secs} seconds</p>";
         $headers = 'From: maps@cartessa.com' . "\r\n" .
                    'Reply-To: ithippyshawn@gmail.com' . "\r\n" .
                    'X-Mailer: PHP/' . phpversion();
@@ -347,14 +347,6 @@ class ZohoSync extends Command
 */
     }
 
-    public function elapsed($seconds) {
-        $hours = floor($seconds / 3600);
-        $minutes = floor(($seconds / 60) % 60);
-        $seconds = $seconds % 60;
-        $hours = ($hours > 0) ? $hours . ' hours' : '';
-        $minutes = ($minutes > 0) ? $minutes . ' minutes' : '';
-        $seconds = ($seconds > 0) ? $seconds . ' seconds' : '';
-
-        return "$hours $minutes $seconds";
-    }
 }
+
+

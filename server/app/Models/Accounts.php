@@ -108,3 +108,4 @@ class Accounts extends \Illuminate\Database\Eloquent\Model
         return $data;
     }
 }
+

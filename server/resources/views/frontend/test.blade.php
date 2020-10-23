@@ -19,7 +19,7 @@
 <body>
 
 <!-- this div will hold your map -->
-<div id="map"></div>
+<div id="map" style="height:500px"></div>
 
 <!-- this div will hold your store info -->
 <div id="info_div"></div>

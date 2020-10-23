@@ -22,7 +22,6 @@ return [
     | any other location as required by the application or its packages.
     |
     */
-
     'name' => env('APP_NAME', 'Find a Provider '.app()->version()),
 
     /*
@@ -203,8 +202,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         Mailjet\LaravelMailjet\MailjetServiceProvider::class,
         Mailjet\LaravelMailjet\MailjetMailServiceProvider::class,
-        Fruitcake\Cors\CorsServiceProvider::class,
         Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class
+//        Fruitcake\Cors\CorsServiceProvider::class,
     ],
 
     /*
@@ -258,3 +257,4 @@ return [
         'Bugsnag' => Bugsnag\BugsnagLaravel\Facades\Bugsnag::class,
     ],
 ];
+

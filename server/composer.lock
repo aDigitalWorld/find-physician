@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "61b62a666e9577048e0f0e07938c4a21",
+    "content-hash": "5674a71883f6c6ef717f5fc48933556f",
     "packages": [
         {
             "name": "albertcht/invisible-recaptcha",
@@ -332,36 +332,36 @@
         },
         {
             "name": "asm89/stack-cors",
-            "version": "1.3.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/asm89/stack-cors.git",
-                "reference": "b9c31def6a83f84b4d4a40d35996d375755f0e08"
+                "reference": "23f469e81c65e2fb7fc7bce371fbdc363fe32adf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/asm89/stack-cors/zipball/b9c31def6a83f84b4d4a40d35996d375755f0e08",
-                "reference": "b9c31def6a83f84b4d4a40d35996d375755f0e08",
+                "url": "https://api.github.com/repos/asm89/stack-cors/zipball/23f469e81c65e2fb7fc7bce371fbdc363fe32adf",
+                "reference": "23f469e81c65e2fb7fc7bce371fbdc363fe32adf",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9",
+                "php": "^7.0",
                 "symfony/http-foundation": "~2.7|~3.0|~4.0|~5.0",
                 "symfony/http-kernel": "~2.7|~3.0|~4.0|~5.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5.0 || ^4.8.10",
-                "squizlabs/php_codesniffer": "^2.3"
+                "phpunit/phpunit": "^6|^7|^8|^9",
+                "squizlabs/php_codesniffer": "^3.5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2-dev"
+                    "dev-master": "2.0-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Asm89\\Stack\\": "src/Asm89/Stack/"
+                    "Asm89\\Stack\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -380,49 +380,44 @@
                 "cors",
                 "stack"
             ],
-            "time": "2019-12-24T22:41:47+00:00"
+            "time": "2020-05-31T07:17:05+00:00"
         },
         {
-            "name": "barryvdh/laravel-cors",
-            "version": "v0.11.4",
+            "name": "bugsnag/bugsnag",
+            "version": "v3.21.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/fruitcake/laravel-cors.git",
-                "reference": "03492f1a3bc74a05de23f93b94ac7cc5c173eec9"
+                "url": "https://github.com/bugsnag/bugsnag-php.git",
+                "reference": "531fe1c16beb68af698e35bd5b3a19a422399e28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fruitcake/laravel-cors/zipball/03492f1a3bc74a05de23f93b94ac7cc5c173eec9",
-                "reference": "03492f1a3bc74a05de23f93b94ac7cc5c173eec9",
+                "url": "https://api.github.com/repos/bugsnag/bugsnag-php/zipball/531fe1c16beb68af698e35bd5b3a19a422399e28",
+                "reference": "531fe1c16beb68af698e35bd5b3a19a422399e28",
                 "shasum": ""
             },
             "require": {
-                "asm89/stack-cors": "^1.2",
-                "illuminate/support": "^5.5|^6",
-                "php": ">=7",
-                "symfony/http-foundation": "^3.1|^4",
-                "symfony/http-kernel": "^3.1|^4"
+                "composer/ca-bundle": "^1.0",
+                "guzzlehttp/guzzle": "^5.0|^6.0|^7.0",
+                "php": ">=5.5"
             },
             "require-dev": {
-                "laravel/framework": "^5.5",
-                "orchestra/testbench": "3.3.x|3.4.x|3.5.x|3.6.x|3.7.x",
-                "phpunit/phpunit": "^4.8|^5.2|^7.0",
-                "squizlabs/php_codesniffer": "^2.3"
+                "graham-campbell/testbench-core": "^1.1",
+                "guzzlehttp/psr7": "^1.3",
+                "mockery/mockery": "^0.9.4|^1.3.1",
+                "mtdowling/burgomaster": "dev-master#72151eddf5f0cf101502b94bf5031f9c53501a04",
+                "php-mock/php-mock-phpunit": "^1.1|^2.1",
+                "phpunit/phpunit": "^4.8.36|^7.5.15"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.11-dev"
-                },
-                "laravel": {
-                    "providers": [
-                        "Barryvdh\\Cors\\ServiceProvider"
-                    ]
+                    "dev-master": "3.20-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Barryvdh\\Cors\\": "src/"
+                    "Bugsnag\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -431,18 +426,139 @@
             ],
             "authors": [
                 {
-                    "name": "Barry vd. Heuvel",
-                    "email": "barryvdh@gmail.com"
+                    "name": "James Smith",
+                    "email": "notifiers@bugsnag.com",
+                    "homepage": "https://bugsnag.com"
                 }
             ],
-            "description": "Adds CORS (Cross-Origin Resource Sharing) headers support in your Laravel application",
+            "description": "Official Bugsnag notifier for PHP applications.",
+            "homepage": "https://github.com/bugsnag/bugsnag-php",
             "keywords": [
-                "api",
-                "cors",
-                "crossdomain",
-                "laravel"
+                "bugsnag",
+                "errors",
+                "exceptions",
+                "logging",
+                "tracking"
             ],
-            "time": "2019-08-28T11:27:11+00:00"
+            "time": "2020-04-29T10:59:17+00:00"
+        },
+        {
+            "name": "bugsnag/bugsnag-laravel",
+            "version": "v2.19.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bugsnag/bugsnag-laravel.git",
+                "reference": "bebac599024d76210b9a5172372263e7ec6db9c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bugsnag/bugsnag-laravel/zipball/bebac599024d76210b9a5172372263e7ec6db9c2",
+                "reference": "bebac599024d76210b9a5172372263e7ec6db9c2",
+                "shasum": ""
+            },
+            "require": {
+                "bugsnag/bugsnag": "^3.20",
+                "bugsnag/bugsnag-psr-logger": "^1.4",
+                "illuminate/contracts": "^5.0|^6.0|^7.0",
+                "illuminate/support": "^5.0|^6.0|^7.0",
+                "monolog/monolog": "^1.12|^2.0",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "graham-campbell/testbench": "^3.1|^4.0|^5.0",
+                "mockery/mockery": "^0.9.4|^1.3.1",
+                "phpunit/phpunit": "^4.8.36|^5.6.3|^6.3.1|^7.5.15|^8.3.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.18-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Bugsnag\\BugsnagLaravel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "James Smith",
+                    "email": "notifiers@bugsnag.com"
+                }
+            ],
+            "description": "Official Bugsnag notifier for Laravel applications.",
+            "homepage": "https://github.com/bugsnag/bugsnag-laravel",
+            "keywords": [
+                "bugsnag",
+                "errors",
+                "exceptions",
+                "laravel",
+                "logging",
+                "tracking"
+            ],
+            "time": "2020-05-11T09:33:48+00:00"
+        },
+        {
+            "name": "bugsnag/bugsnag-psr-logger",
+            "version": "v1.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bugsnag/bugsnag-psr-logger.git",
+                "reference": "222a7338bc5c39833c7c3922a175c539e996797c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bugsnag/bugsnag-psr-logger/zipball/222a7338bc5c39833c7c3922a175c539e996797c",
+                "reference": "222a7338bc5c39833c7c3922a175c539e996797c",
+                "shasum": ""
+            },
+            "require": {
+                "bugsnag/bugsnag": "^3.10",
+                "php": ">=5.5",
+                "psr/log": "^1.0"
+            },
+            "require-dev": {
+                "graham-campbell/testbench-core": "^1.1",
+                "mockery/mockery": "^0.9.4|^1.3.1",
+                "phpunit/phpunit": "^4.8.36|^7.5.15"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.5-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Bugsnag\\PsrLogger\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "James Smith",
+                    "email": "notifiers@bugsnag.com",
+                    "homepage": "https://bugsnag.com"
+                }
+            ],
+            "description": "Official Bugsnag PHP PSR Logger.",
+            "homepage": "https://github.com/bugsnag/bugsnag-psr",
+            "keywords": [
+                "bugsnag",
+                "errors",
+                "exceptions",
+                "logging",
+                "psr",
+                "tracking"
+            ],
+            "time": "2020-02-26T22:02:20+00:00"
         },
         {
             "name": "cache/adapter-common",
@@ -559,6 +675,62 @@
                 "tag"
             ],
             "time": "2017-03-13T09:14:27+00:00"
+        },
+        {
+            "name": "composer/ca-bundle",
+            "version": "1.2.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/ca-bundle.git",
+                "reference": "95c63ab2117a72f48f5a55da9740a3273d45b7fd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/95c63ab2117a72f48f5a55da9740a3273d45b7fd",
+                "reference": "95c63ab2117a72f48f5a55da9740a3273d45b7fd",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "ext-pcre": "*",
+                "php": "^5.3.2 || ^7.0 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || 6.5 - 8",
+                "psr/log": "^1.0",
+                "symfony/process": "^2.5 || ^3.0 || ^4.0 || ^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\CaBundle\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "Lets you find a path to the system CA bundle, and includes a fallback to the Mozilla CA bundle.",
+            "keywords": [
+                "cabundle",
+                "cacert",
+                "certificate",
+                "ssl",
+                "tls"
+            ],
+            "time": "2020-04-08T08:27:21+00:00"
         },
         {
             "name": "creativeorange/gravatar",
@@ -911,6 +1083,39 @@
             ],
             "description": "PSR-18 adapter for the Guzzle HTTP client",
             "time": "2019-02-19T12:03:12+00:00"
+        },
+        {
+            "name": "dnoegel/php-xdg-base-dir",
+            "version": "v0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dnoegel/php-xdg-base-dir.git",
+                "reference": "8f8a6e48c5ecb0f991c2fdcf5f154a47d85f9ffd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dnoegel/php-xdg-base-dir/zipball/8f8a6e48c5ecb0f991c2fdcf5f154a47d85f9ffd",
+                "reference": "8f8a6e48c5ecb0f991c2fdcf5f154a47d85f9ffd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~7.0|~6.0|~5.0|~4.8.35"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "XdgBaseDir\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "implementation of xdg base directory specification for php",
+            "time": "2019-12-04T15:06:13+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -1310,6 +1515,82 @@
                 "php"
             ],
             "time": "2020-03-25T18:49:23+00:00"
+        },
+        {
+            "name": "fruitcake/laravel-cors",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fruitcake/laravel-cors.git",
+                "reference": "dbfc311b25d4873c3c2382b26860be3567492bd6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fruitcake/laravel-cors/zipball/dbfc311b25d4873c3c2382b26860be3567492bd6",
+                "reference": "dbfc311b25d4873c3c2382b26860be3567492bd6",
+                "shasum": ""
+            },
+            "require": {
+                "asm89/stack-cors": "^2.0.1",
+                "illuminate/contracts": "^5.6|^6.0|^7.0|^8.0",
+                "illuminate/support": "^5.6|^6.0|^7.0|^8.0",
+                "php": ">=7.1",
+                "symfony/http-foundation": "^4.0|^5.0",
+                "symfony/http-kernel": "^4.0|^5.0"
+            },
+            "require-dev": {
+                "laravel/framework": "^5.5|^6.0|^7.0|^8.0",
+                "orchestra/dusk-updater": "^1.2",
+                "orchestra/testbench": "^3.5|^4.0|^5.0|^6.0",
+                "orchestra/testbench-dusk": "^5.1",
+                "phpro/grumphp": "^0.16|^0.17",
+                "phpunit/phpunit": "^6.0|^7.0|^8.0",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Fruitcake\\Cors\\CorsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fruitcake\\Cors\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fruitcake",
+                    "homepage": "https://fruitcake.nl"
+                },
+                {
+                    "name": "Barry vd. Heuvel",
+                    "email": "barryvdh@gmail.com"
+                }
+            ],
+            "description": "Adds CORS (Cross-Origin Resource Sharing) headers support in your Laravel application",
+            "keywords": [
+                "api",
+                "cors",
+                "crossdomain",
+                "laravel"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/barryvdh",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-05-31T07:30:16+00:00"
         },
         {
             "name": "gluedev/laravel-stackdriver",
@@ -2139,6 +2420,96 @@
             "time": "2019-07-01T23:21:34+00:00"
         },
         {
+            "name": "jakub-onderka/php-console-color",
+            "version": "v0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JakubOnderka/PHP-Console-Color.git",
+                "reference": "d5deaecff52a0d61ccb613bb3804088da0307191"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JakubOnderka/PHP-Console-Color/zipball/d5deaecff52a0d61ccb613bb3804088da0307191",
+                "reference": "d5deaecff52a0d61ccb613bb3804088da0307191",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "jakub-onderka/php-code-style": "1.0",
+                "jakub-onderka/php-parallel-lint": "1.0",
+                "jakub-onderka/php-var-dump-check": "0.*",
+                "phpunit/phpunit": "~4.3",
+                "squizlabs/php_codesniffer": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JakubOnderka\\PhpConsoleColor\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Jakub Onderka",
+                    "email": "jakub.onderka@gmail.com"
+                }
+            ],
+            "abandoned": "php-parallel-lint/php-console-color",
+            "time": "2018-09-29T17:23:10+00:00"
+        },
+        {
+            "name": "jakub-onderka/php-console-highlighter",
+            "version": "v0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JakubOnderka/PHP-Console-Highlighter.git",
+                "reference": "9f7a229a69d52506914b4bc61bfdb199d90c5547"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JakubOnderka/PHP-Console-Highlighter/zipball/9f7a229a69d52506914b4bc61bfdb199d90c5547",
+                "reference": "9f7a229a69d52506914b4bc61bfdb199d90c5547",
+                "shasum": ""
+            },
+            "require": {
+                "ext-tokenizer": "*",
+                "jakub-onderka/php-console-color": "~0.2",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "jakub-onderka/php-code-style": "~1.0",
+                "jakub-onderka/php-parallel-lint": "~1.0",
+                "jakub-onderka/php-var-dump-check": "~0.1",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~1.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JakubOnderka\\PhpConsoleHighlighter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jakub Onderka",
+                    "email": "acci@acci.cz",
+                    "homepage": "http://www.acci.cz/"
+                }
+            ],
+            "description": "Highlight PHP code in terminal",
+            "abandoned": "php-parallel-lint/php-console-highlighter",
+            "time": "2018-09-29T18:48:56+00:00"
+        },
+        {
             "name": "lab404/laravel-impersonate",
             "version": "1.6.0",
             "source": {
@@ -2465,6 +2836,69 @@
             "time": "2020-02-04T15:30:01+00:00"
         },
         {
+            "name": "laravel/tinker",
+            "version": "v1.0.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/tinker.git",
+                "reference": "ad571aacbac1539c30d480908f9d0c9614eaf1a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/tinker/zipball/ad571aacbac1539c30d480908f9d0c9614eaf1a7",
+                "reference": "ad571aacbac1539c30d480908f9d0c9614eaf1a7",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "~5.1|^6.0",
+                "illuminate/contracts": "~5.1|^6.0",
+                "illuminate/support": "~5.1|^6.0",
+                "php": ">=5.5.9",
+                "psy/psysh": "0.7.*|0.8.*|0.9.*",
+                "symfony/var-dumper": "~3.0|~4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0|~5.0"
+            },
+            "suggest": {
+                "illuminate/database": "The Illuminate Database package (~5.1)."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Tinker\\TinkerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Tinker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Powerful REPL for the Laravel framework.",
+            "keywords": [
+                "REPL",
+                "Tinker",
+                "laravel",
+                "psysh"
+            ],
+            "time": "2019-08-07T15:10:45+00:00"
+        },
+        {
             "name": "league/climate",
             "version": "3.5.2",
             "source": {
@@ -2745,6 +3179,175 @@
                 "twitter"
             ],
             "time": "2016-08-17T00:36:58+00:00"
+        },
+        {
+            "name": "mailjet/laravel-mailjet",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mailjet/laravel-mailjet.git",
+                "reference": "7c36673139225b2af10593ec02ce2204a7efb5d8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mailjet/laravel-mailjet/zipball/7c36673139225b2af10593ec02ce2204a7efb5d8",
+                "reference": "7c36673139225b2af10593ec02ce2204a7efb5d8",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": ">=5",
+                "laravel/tinker": "~1.0",
+                "mailjet/mailjet-apiv3-php": "^1.2",
+                "mailjet/mailjet-swiftmailer": "^2.0",
+                "php": ">=7.1.3"
+            },
+            "require-dev": {
+                "fzaninotto/faker": "~1.4",
+                "mockery/mockery": "0.9.*",
+                "orchestra/testbench": "3.6",
+                "phpunit/phpunit": "~7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mailjet\\LaravelMailjet\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gaetan DELBART",
+                    "email": "gaetan@moltencore.io",
+                    "homepage": "https://github.com/gagaXD"
+                },
+                {
+                    "name": "Titouan BENOIT",
+                    "email": "titouan.benoit@gmx.fr",
+                    "homepage": "https://github.com/Nightbr"
+                },
+                {
+                    "name": "Mailjet API",
+                    "email": "api@mailjet.com",
+                    "homepage": "https://dev.mailjet.com/"
+                }
+            ],
+            "description": "Laravel package for Mailjet API V3 and Laravel Mailjet Mail Transport",
+            "homepage": "https://github.com/mailjet/laravel-mailjet",
+            "keywords": [
+                "Mailjet",
+                "framework",
+                "laravel",
+                "mailjet API",
+                "mailjet wrapper",
+                "transport"
+            ],
+            "time": "2020-01-21T08:12:49+00:00"
+        },
+        {
+            "name": "mailjet/mailjet-apiv3-php",
+            "version": "v1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mailjet/mailjet-apiv3-php.git",
+                "reference": "9d89b9a424a9631bff8e499cbbe34058481e8102"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mailjet/mailjet-apiv3-php/zipball/9d89b9a424a9631bff8e499cbbe34058481e8102",
+                "reference": "9d89b9a424a9631bff8e499cbbe34058481e8102",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~6.0|~5.3",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "php-coveralls/php-coveralls": "^1.0",
+                "phpunit/phpunit": "^4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Mailjet": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mailjet",
+                    "email": "dev@mailjet.com",
+                    "homepage": "https://dev.mailjet.com"
+                }
+            ],
+            "description": "PHP wrapper for the Mailjet API",
+            "homepage": "https://github.com/mailjet/mailjet-apiv3-php/",
+            "keywords": [
+                "Mailjet",
+                "api",
+                "email",
+                "php",
+                "v3"
+            ],
+            "time": "2018-10-31T13:24:45+00:00"
+        },
+        {
+            "name": "mailjet/mailjet-swiftmailer",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mailjet/MailjetSwiftMailer.git",
+                "reference": "300eb931b8b36c7f55349b54a41bfd763a182bff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mailjet/MailjetSwiftMailer/zipball/300eb931b8b36c7f55349b54a41bfd763a182bff",
+                "reference": "300eb931b8b36c7f55349b54a41bfd763a182bff",
+                "shasum": ""
+            },
+            "require": {
+                "mailjet/mailjet-apiv3-php": "^1.2",
+                "php": ">=7.0",
+                "swiftmailer/swiftmailer": "~6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7",
+                "symfony/config": ">=2.0|~3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mailjet\\MailjetSwiftMailer\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Titouan BENOIT",
+                    "email": "titouan.benoit@gmx.fr",
+                    "homepage": "https://github.com/Nightbr"
+                },
+                {
+                    "name": "Mailjet API",
+                    "email": "api@mailjet.com",
+                    "homepage": "https://dev.mailjet.com/"
+                }
+            ],
+            "description": "A SwiftMailer transport implementation for Mailjet",
+            "homepage": "https://github.com/mailjet/MailjetSwiftMailer",
+            "keywords": [
+                "Mailjet",
+                "swiftmailer"
+            ],
+            "time": "2019-06-13T12:40:37+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -4127,6 +4730,80 @@
             "time": "2017-10-23T01:57:42+00:00"
         },
         {
+            "name": "psy/psysh",
+            "version": "v0.9.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bobthecow/psysh.git",
+                "reference": "90da7f37568aee36b116a030c5f99c915267edd4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/90da7f37568aee36b116a030c5f99c915267edd4",
+                "reference": "90da7f37568aee36b116a030c5f99c915267edd4",
+                "shasum": ""
+            },
+            "require": {
+                "dnoegel/php-xdg-base-dir": "0.1.*",
+                "ext-json": "*",
+                "ext-tokenizer": "*",
+                "jakub-onderka/php-console-highlighter": "0.3.*|0.4.*",
+                "nikic/php-parser": "~1.3|~2.0|~3.0|~4.0",
+                "php": ">=5.4.0",
+                "symfony/console": "~2.3.10|^2.4.2|~3.0|~4.0|~5.0",
+                "symfony/var-dumper": "~2.7|~3.0|~4.0|~5.0"
+            },
+            "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.2",
+                "hoa/console": "~2.15|~3.16",
+                "phpunit/phpunit": "~4.8.35|~5.0|~6.0|~7.0"
+            },
+            "suggest": {
+                "ext-pcntl": "Enabling the PCNTL extension makes PsySH a lot happier :)",
+                "ext-pdo-sqlite": "The doc command requires SQLite to work.",
+                "ext-posix": "If you have PCNTL, you'll want the POSIX extension as well.",
+                "ext-readline": "Enables support for arrow-key history navigation, and showing and manipulating command history.",
+                "hoa/console": "A pure PHP readline implementation. You'll want this if your PHP install doesn't already support readline or libedit."
+            },
+            "bin": [
+                "bin/psysh"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "0.9.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "Psy\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Justin Hileman",
+                    "email": "justin@justinhileman.info",
+                    "homepage": "http://justinhileman.com"
+                }
+            ],
+            "description": "An interactive shell for modern PHP.",
+            "homepage": "http://psysh.org",
+            "keywords": [
+                "REPL",
+                "console",
+                "interactive",
+                "shell"
+            ],
+            "time": "2019-12-06T14:19:43+00:00"
+        },
+        {
             "name": "ralouphie/getallheaders",
             "version": "3.0.3",
             "source": {
@@ -4296,6 +4973,68 @@
                 "uri"
             ],
             "time": "2017-06-14T03:57:53+00:00"
+        },
+        {
+            "name": "rtconner/laravel-tagging",
+            "version": "4.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rtconner/laravel-tagging.git",
+                "reference": "84c18befada83935024272c238e412d49cfcc88c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rtconner/laravel-tagging/zipball/84c18befada83935024272c238e412d49cfcc88c",
+                "reference": "84c18befada83935024272c238e412d49cfcc88c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": ">= 5.0|^6.0|^7.0",
+                "illuminate/support": ">= 5.0|^6.0|^7.0",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~1.2",
+                "orchestra/testbench": "5.*|4.*",
+                "phpunit/phpunit": "8.*",
+                "vlucas/phpdotenv": "~4.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Conner\\Tagging\\Providers\\TaggingServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Conner\\Tagging\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Robert Conner",
+                    "email": "rtconner+gh@smarter.bz"
+                }
+            ],
+            "description": "Use PHP traits to extend Laravel Eloquent Models to allow Tags. Models can be marked as Taggable.",
+            "homepage": "https://smartersoftware.net/packages/laravel-tagging-taggable",
+            "keywords": [
+                "Taggable",
+                "eloquent",
+                "laravel",
+                "laravel5",
+                "tag",
+                "tagged",
+                "tagging",
+                "tags"
+            ],
+            "time": "2020-04-28T03:43:01+00:00"
         },
         {
             "name": "seld/cli-prompt",
@@ -6852,62 +7591,6 @@
             "time": "2019-04-02T17:06:04+00:00"
         },
         {
-            "name": "composer/ca-bundle",
-            "version": "1.2.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "95c63ab2117a72f48f5a55da9740a3273d45b7fd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/95c63ab2117a72f48f5a55da9740a3273d45b7fd",
-                "reference": "95c63ab2117a72f48f5a55da9740a3273d45b7fd",
-                "shasum": ""
-            },
-            "require": {
-                "ext-openssl": "*",
-                "ext-pcre": "*",
-                "php": "^5.3.2 || ^7.0 || ^8.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || 6.5 - 8",
-                "psr/log": "^1.0",
-                "symfony/process": "^2.5 || ^3.0 || ^4.0 || ^5.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Composer\\CaBundle\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jordi Boggiano",
-                    "email": "j.boggiano@seld.be",
-                    "homepage": "http://seld.be"
-                }
-            ],
-            "description": "Lets you find a path to the system CA bundle, and includes a fallback to the Mozilla CA bundle.",
-            "keywords": [
-                "cabundle",
-                "cacert",
-                "certificate",
-                "ssl",
-                "tls"
-            ],
-            "time": "2020-04-08T08:27:21+00:00"
-        },
-        {
             "name": "composer/composer",
             "version": "1.10.6",
             "source": {
@@ -7961,94 +8644,6 @@
                 "yml"
             ],
             "time": "2017-11-07T22:49:43+00:00"
-        },
-        {
-            "name": "jakub-onderka/php-console-color",
-            "version": "v0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/JakubOnderka/PHP-Console-Color.git",
-                "reference": "d5deaecff52a0d61ccb613bb3804088da0307191"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/JakubOnderka/PHP-Console-Color/zipball/d5deaecff52a0d61ccb613bb3804088da0307191",
-                "reference": "d5deaecff52a0d61ccb613bb3804088da0307191",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "jakub-onderka/php-code-style": "1.0",
-                "jakub-onderka/php-parallel-lint": "1.0",
-                "jakub-onderka/php-var-dump-check": "0.*",
-                "phpunit/phpunit": "~4.3",
-                "squizlabs/php_codesniffer": "1.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "JakubOnderka\\PhpConsoleColor\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Jakub Onderka",
-                    "email": "jakub.onderka@gmail.com"
-                }
-            ],
-            "time": "2018-09-29T17:23:10+00:00"
-        },
-        {
-            "name": "jakub-onderka/php-console-highlighter",
-            "version": "v0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/JakubOnderka/PHP-Console-Highlighter.git",
-                "reference": "9f7a229a69d52506914b4bc61bfdb199d90c5547"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/JakubOnderka/PHP-Console-Highlighter/zipball/9f7a229a69d52506914b4bc61bfdb199d90c5547",
-                "reference": "9f7a229a69d52506914b4bc61bfdb199d90c5547",
-                "shasum": ""
-            },
-            "require": {
-                "ext-tokenizer": "*",
-                "jakub-onderka/php-console-color": "~0.2",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "jakub-onderka/php-code-style": "~1.0",
-                "jakub-onderka/php-parallel-lint": "~1.0",
-                "jakub-onderka/php-var-dump-check": "~0.1",
-                "phpunit/phpunit": "~4.0",
-                "squizlabs/php_codesniffer": "~1.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "JakubOnderka\\PhpConsoleHighlighter\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jakub Onderka",
-                    "email": "acci@acci.cz",
-                    "homepage": "http://www.acci.cz/"
-                }
-            ],
-            "description": "Highlight PHP code in terminal",
-            "time": "2018-09-29T18:48:56+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -10421,5 +11016,6 @@
     "platform": {
         "php": "^7.2"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }

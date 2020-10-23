@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'mailgun'),
+    'driver' => env('MAIL_DRIVER', 'mailjet'),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +56,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'ithippyshawn@gmail.com'),
-        'name' => env('MAIL_FROM_NAME', 'Store Locator Server'),
+        'name' => env('MAIL_FROM_NAME', 'Shawn Crigger'),
     ],
 
     /*
@@ -132,3 +132,4 @@ return [
 
     'log_channel' => env('MAIL_LOG_CHANNEL'),
 ];
+

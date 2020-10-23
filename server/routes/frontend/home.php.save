@@ -33,14 +33,7 @@ Route::group(['middleware' => ['auth', 'password_expires']], function () {
     });
 });
 
-    Route::get('all', [ApiController::class, 'all'])->name('all');
-    Route::get('search', [ApiController::class, 'index'])->name('search');
-
-    Route::get('/csv', [ApiController::class, 'download'])->name('csv');
-    Route::get('/tags', [ApiController::class, 'tags'])->name('tags');
-/*
-Route::group(['namespace' => 'Api', 'prefix' => 'api', 'as' => 'api.'], function () {
+Route::group(['namespace' => 'Api' /*, 'prefix' => 'api', 'as' => 'api.'*/], function () {
     Route::get('all', [ApiController::class, 'all'])->name('all');
     Route::get('search', [ApiController::class, 'index'])->name('search');
 });
-*/

@@ -302,6 +302,12 @@ class ZohoSyncDevices extends Command
         $account->city  = is_null($city) ? '' : $city;
         $account->country = is_null($country) ? '' : $country;
         $account->website = is_null($data['Website']) ? '' : $data['Website'];
+
+        $account->ZohoID = $data['ZohoID'];
+        $account->ZohoID = isset($data['ZohoID']) ? $data['ZohoID'] : null;
+        $account->delivery_date = isset($data['delivery_date']) ? $data['delivery_date'] : null;
+        $account->install_date = isset($data['install_date']) ? $data['install_date'] : null;
+
         $account->phone = isset($data['Phone']) ? $data['Phone'] : null;
         $account->training_date = isset($data['training_date']) ? $data['training_date'] : null;
         $account->formatted_address = isset($geocode->formatted_address) ? $geocode->formatted_address : $account->formatted_address;
@@ -311,46 +317,6 @@ class ZohoSyncDevices extends Command
         $account->created_at = $data['created_at'];
         $account->modified_at = $data['modified_at'];
         $account->save();
-    }
-    public function handle2()
-    {
-        $configuration = array(
-            'client_id' => '1000.8XYKIJOSBT6L90523EUFF2APBJVD4H',
-            'client_secret' => '4e89274db40d38a1980aad256620d8bf3849993635',
-            'redirect_uri' => 'https://cartessaaesthetics.com/oauthcallback',
-            'applicationLogFilePath' => storage_path('zoho'),
-            'token_persistence_path' => storage_path('zoho/tokens'),
-            'sandbox' => true,
-            'currentUserEmail' => 'brandon@southerntidemedia.com',
-        );
-//        $zohoAuthToken = '1000.73724133e5c049b47466256141023b1c.8f78018effeecff2ef1412f069c4acf2';
-        $zohoClient     = ZCRMRestClient::initialize($configuration);
-        $oAuthClient = ZohoOAuth::getClientInstance();
-        $refreshToken = "1000.822dbb644d515127cc9fcef8b6930685.b0bcd0945e51aa680a71642380d08a73";
-        $userIdentifier = "brandon@southerntidemedia.com";
-        $oAuthTokens = $oAuthClient->generateAccessTokenFromRefreshToken($refreshToken,$userIdentifier);
-
-        $apiResponse=ZCRMModule::getInstance('Products')->getRecord(3605471000000239102); // 410405000001519001 - Lead Id
-        $record=$apiResponse->getData();
-        echo $record->getFieldValue("Product_Name");die;
-        dump($record->Product_Name);die;
-        echo $record->getEntityId();
-        echo $record->getModuleApiName();
-        echo $record->getLookupLabel();
-        echo $record->getCreatedBy()->getId();
-        echo $record->getModifiedBy()->getId();
-        echo $record->getOwner()->getId();
-        echo $record->getCreatedTime();
-        echo $record->getModifiedTime();
-        $map=$record->getData();
-        dump($map);die;
-        foreach ($map as $key=>$value) {
-            if($value instanceof ZCRMRecord) {
-                echo "\n".$value->getEntityId().":".$value->getModuleApiName().":".$value->getLookupLabel();
-            } else {
-                echo $key.":".$value;
-            }
-        }
     }
     public function handle()
     {
@@ -374,17 +340,15 @@ class ZohoSyncDevices extends Command
         $climate = new \League\CLImate\CLImate;
         $moreRecords = true;
         $page = 1;
-        $accountsUpdated = $newAccounts = 0;
+        $accountsUpdated = $newAccount = 0;
         $fails = $updates = $skipped = $new = 0;
         $missingDate = 0;
         $errors = '';
 
         $climate->lightGreen()->out('Fetching devices from ZohoCRM API.....');
         $climate->lightGreen()->border('*', 40);
-        //$module = ZCRMModule::getInstance("Accounts");
-        //dump($module->getAllFields());die;
         $module = ZCRMModule::getInstance("Products_Sold");
-        $newAccounts = $recordsArray = array();
+        $newAccountAdded = $recordsArray = array();
         $badProducts = array();
         $badAccounts = array();
         $duplicates = 0;
@@ -409,12 +373,12 @@ class ZohoSyncDevices extends Command
                 if (!isset($data['Customer']) OR !isset($data['Product'])) {
                     continue;
                 }
-                /*
+
                 if (!isset($data['Training_Date']) OR empty($data['Training_Date']) OR is_null($data['Training_Date'])) {
                     $missingDate++;
                     continue;
                 }
-                */
+
                 try{
                     $CustomerID   = $data['Customer']->getEntityId();
                     $DeviceID     = $data['Product']->getEntityId();
@@ -429,7 +393,7 @@ class ZohoSyncDevices extends Command
                     $apiResponse = ZCRMModule::getInstance('Products')->getRecord($DeviceID);
                     $productData = $apiResponse->getData();
                     $org         = $productData->getFieldValue("Product_Name");
-                    $climate->blue()->out('Product ' . $org . ' Customer ' . $name);
+                    $climate->blue()->out('Product ' . $org . ' Customer ' . $name . ' ZohoID:' . $CustomerID);
                     $tag         = $this->_fix_product_name($org);
                     if (!in_array($tag, $this->products)) {
                         $climate->red()->out('Skipping product ' . $tag);
@@ -438,12 +402,12 @@ class ZohoSyncDevices extends Command
                         continue;
                     }
 
-                    $account = Accounts::where('name', $name)->first();
+                    $account = Accounts::where('ZohoID', $CustomerID)->first();
                     $theData = $accountData->getData();
+                    $theData['ZohoID'] = $CustomerID;
                     $theData['training_date'] = date('Y-m-d', strtotime($trainingDate));
                     $theData['delivery_date'] = date('Y-m-d', strtotime($deliveryDate));
                     $theData['install_date']  = date('Y-m-d', strtotime($installDate));
-
                     $theData['created_at'] = date('Y-m-d H:i:s', strtotime($accountData->getCreatedTime()));
                     $theData['modified_at'] = date('Y-m-d H:i:s', strtotime($accountData->getModifiedTime()));
                     if (isset($account->modified_at)) {
@@ -452,15 +416,15 @@ class ZohoSyncDevices extends Command
                     } else {
                         $account = new Accounts;
                         $this->process_data($account,$theData);
-                        $newAccounts["{$name}"][] = $name;
+                        $newAccountAdded["{$CustomerID}"][] = $name;
                         $newAccounts++;
                     }
                     $account->untag();
-                    if (!isset($this->tags[$name])) {
-                        $this->tags[$name] = array();
+                    if (!isset($this->tags[$CustomerID])) {
+                        $this->tags[$CustomerID] = array();
                     }
-                    if (isset($this->tags[$name]) && !in_array($tag, $this->tags[$name])) {
-                        $this->tags["{$name}"][] = $tag;
+                    if (isset($this->tags[$CustomerID]) && !in_array($tag, $this->tags[$CustomerID])) {
+                        $this->tags["{$CustomerID}"][] = $tag;
                         $climate->info()->out("Customer Account:{$name} with Tag:{$tag}");
                     } else {
                         $duplicates++;
@@ -473,7 +437,7 @@ class ZohoSyncDevices extends Command
         }
         $products_found = array();
         foreach ($this->tags as $key => $value) {
-            $account = Accounts::where('name', $key)->first();
+            $account = Accounts::where('ZohoID', $key)->first();
             if ($account && count($value) > 0) {
                 $tags = array_unique($value);
                 foreach ($tags as &$tag) {
@@ -503,18 +467,18 @@ class ZohoSyncDevices extends Command
         $products_found = $this->fixArray($products_found);
         $badProducts    = $this->fixArray($badProducts);
         $badAccounts    = $this->fixArray($badAccounts);
-        $newAccounts    = $this->fixArray($newAccounts);
+        $newAccountAdded = $this->fixArray($newAccountAdded);
 
         $subject = 'ZohoSyncDevices completed at Cartessa';
         $message = "
         <h2>Syncing data complete</h2><p>
-        New Accounts Created {$newAccounts}<br>
+        New Accounts Created {$newAccount}<br>
         Accounts Updated {$accountsUpdated}<br>
         Customer Duplicates {$duplicates}<br>
         Missing Date {$missingDate}<br>
         Tags Updated {$updates}<br><br>
         Products Found: {$products_found}<br>
-        New Accounts Created: {$newAccounts}<br>
+        New Accounts Created: {$newAccountAdded}<br>
         Bad Products Not Tagged: {$badProducts}<br>
         Bad Accounts Not Tagged: {$badAccounts}<br>";
         if ($errors ) {
@@ -548,12 +512,26 @@ class ZohoSyncDevices extends Command
         $response->success() && var_dump($response->getData());
     }
 
-    public function fixArray($array) {
-        if (!isset($array) && !is_array($array)) return 'none';
-        $array = array_unique($array);
-        return implode(', ', $array);
-    }
+    function fixArray($myArray) {
+        if(!is_array($myArray))  return $myArray;
+        try {
 
+            foreach ($myArray as &$myvalue) {
+                $myvalue = serialize($myvalue);
+            }
+
+            $myArray = array_unique($myArray);
+
+            foreach ($myArray as &$myvalue){
+                $myvalue = unserialize($myvalue);
+            }
+        } catch (Exception $e) {
+            Bugsnag::notifyException($e);
+            return 'ERROR: ' . $e->getMessage();
+        }
+
+        return $myArray;
+    }
     public function elapsed($seconds) {
         $hours = floor($seconds / 3600);
         $minutes = floor(($seconds / 60) % 60);
@@ -565,3 +543,4 @@ class ZohoSyncDevices extends Command
         return "{$hours} {$minutes} {$seconds}";
     }
 }
+

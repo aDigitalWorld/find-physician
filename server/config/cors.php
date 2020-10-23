@@ -31,7 +31,7 @@ return [
     /*
      * Matches the request origin. `[*]` allows all origins. Wildcards can be used, eg `*.mydomain.com`
      */
-    'allowed_origins_patterns' => ['*', '*.stgcartessa.wpengine.com', '*.cartessaaesthetics.com', '*.cool-peel.com', '*.skinwave.php'],
+    'allowed_origins_patterns' => ['*', '*.stgcartessa.wpengine.com', '*.cartessaaesthetics.com', '*.cool-peel.com', '*.skinwave.php', '*.virtuerf.com'],
 
     /*
      * Patterns that can be used with `preg_match` to match the origin.
@@ -58,3 +58,4 @@ return [
      */
     'supports_credentials' => false,
 ];
+

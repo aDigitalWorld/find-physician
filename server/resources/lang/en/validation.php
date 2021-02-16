@@ -170,6 +170,34 @@ return [
                     'sort' => 'Sort',
                 ],
 
+                'accounts' => [
+                    'active' => 'Active',
+                    'street' => 'Street',
+                    'confirmed' => 'Confirmed',
+                    'city' => 'City',
+                    'name' => 'Name',
+                    'state' => 'State',
+                    'providences' => 'Providence',
+                    'zipcode' => 'Zip Code',
+                    'country' => 'Country',
+                    'phone' => 'Phone Number',
+                    'other_permissions' => 'Other Permissions',
+                    'website' => 'Website',
+                    'send_confirmation_email' => 'Send Confirmation E-mail',
+                    'training_date' => 'Training Date',
+                    'timezone' => 'Timezone',
+                    'language' => 'Language',
+                    'associated_tags' => 'Associated Devices',
+                    'tag_label' => 'Devices',
+                    'tags' => 'Devices',
+                    'override' => 'Sync Override',
+                    'map_location' => 'Map Location',
+                    'ZohoID' => 'Zoho Customer ID',
+                ],
+
+
+
+
                 'users' => [
                     'active' => 'Active',
                     'associated_roles' => 'Associated Roles',

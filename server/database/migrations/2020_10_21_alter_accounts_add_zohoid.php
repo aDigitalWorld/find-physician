@@ -30,3 +30,4 @@ class AccountsAddZohoid extends Migration
         });
     }
 }
+

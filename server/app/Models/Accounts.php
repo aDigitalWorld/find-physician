@@ -3,14 +3,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
+
 /**
  * Class Accounts.
  */
-class Accounts extends \Illuminate\Database\Eloquent\Model
+class Accounts extends Model
 {
-    use \Conner\Tagging\Taggable;
-    public $timestamps = false;
-    protected $fillable = ["name", "street", "city", "state", "zipcode", "country", "website", "lat", "lng", "training_date", "phone", "created_at", "modified_at", "formatted_address", "tags", "created_at", "modified_at"];
+    use \Conner\Tagging\Taggable, SoftDeletes;
+    public $timestamps = true;
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'modified_at';
+    protected $fillable = ["ZohoID", "name", "street", "city", "state", "zipcode", "country", "website", "lat", "lng", "training_date", "phone", "created_at", "modified_at", "formatted_address", "active", "override", "tags", "created_at", "modified_at"];
+
+    public static function outputTags($tags){
+        $tagfield = '';
+        $tagfield .= implode(" ,", $tags);
+        return $tagfield;
+    }
 
     public function scopeComplete($query)
     {
@@ -80,6 +91,7 @@ class Accounts extends \Illuminate\Database\Eloquent\Model
                                    );
             $data = $query->select( DB::raw( implode( ',' ,  $fields ) . ',' .  $distance_select  ) )
             ->where('training_date', '!=', '')
+            ->where('active', '=', '1')
             ->having( 'distance', '<=', $max_distance )
             ->orderBy( 'distance', 'ASC' )->get();
 
@@ -107,5 +119,46 @@ class Accounts extends \Illuminate\Database\Eloquent\Model
         //die();
         return $data;
     }
-}
 
+
+    /**
+     * @param $query
+     * @param bool $status
+     *
+     * @return mixed
+     */
+    public function scopeActive($query, $status = true)
+    {
+        return $query->where('active', $status);
+    }
+
+    /**
+     * @return bool
+     */
+    public function scopeOverride()
+    {
+        return $this->override;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPending()
+    {
+        return ! $this->confirmed;
+    }
+
+    public function getSyncedOn()
+    {
+        $date = new Carbon(strtotime($this->zoho_sync_date));
+        return $date->diffForHumans();
+    }
+}

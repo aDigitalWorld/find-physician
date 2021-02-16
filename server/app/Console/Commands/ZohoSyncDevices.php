@@ -23,6 +23,7 @@ use zcrmsdk\oauth\ZohoOAuth;
 use League\CLImate\CLImate;
 use \Mailjet\Resources;
 use Mailjet\LaravelMailjet\Facades\Mailjet;
+use Carbon\Carbon;
 
 class ZohoSyncDevices extends Command
 {
@@ -41,7 +42,7 @@ class ZohoSyncDevices extends Command
      */
     protected $description = 'Remove all tags';
     protected $oldProducts = array('DenaVe 585nm System', 'Discovery Pico Plus', 'Discovery Pico Plus with Fractional HP', 'Evo Light 4V', 'Evo Light A Star', 'Evo Q Plus C', 'Luxea', 'Luxea with Virdis HP', 'Motus AX', 'Motus AY', 'Physiq', 'Skinwave', 'Subnovii', 'Tetra CO2: 30W', 'V-Lase', 'Virtue RF', 'Vivace RF Microneedling', 'Tetra CO2: 50W', 'Thunder', 'AltaUV', 'SLIM E30 MIXTO SX TFT with V-LASE', 'Studio');
-    protected $products = array('DenaVe', 'Discovery Pico', 'EVO series', 'Luxea', 'AltaUV', 'Motus AX/AY', 'Physiq', 'V-Lace', 'Skinwave', 'Subnovii', 'Tetra CO2 and Coolpeel', 'V-Lase', 'Virtue RF', 'VirtueRF', 'Thunder', 'Vivace RF Microneedling', 'RF Microneedling');
+    protected $products = array('DenaVe', 'Discovery Pico', 'EVO series', 'Luxea', 'AltaUV', 'Motus AX/AY', 'Physiq', 'V-Lace', 'Skinwave', 'Subnovii', 'Tetra CO2 and Coolpeel', 'V-Lase', 'Virtue RF', 'VirtueRF', 'Thunder', 'Vivace RF Microneedling', 'RF Microneedling', 'Duetto MT EVO', 'Domino EVO', 'YouLaser MT');
     /**
      * Create a new command instance.
      *
@@ -121,7 +122,23 @@ class ZohoSyncDevices extends Command
             'WI'=>'Wisconsin',
             'WY'=>'Wyoming',
         );
+        $canadian_states = array(
+            "AB" => "Alberta",
+            "BC" => "Colombie-Britannique",
+            "MB" => "Manitoba",
+            "NB" => "Nouveau-Brunswick",
+            "NL" => "Terre-Neuve-et-Labrador",
+            "NS" => "Nouvelle-Écosse",
+            "NT" => "Territoires du Nord-Ouest",
+            "NU" => "Nunavut",
+            "ON" => "Ontario",
+            "PE" => "Île-du-Prince-Édouard",
+            "QC" => "Québec",
+            "SK" => "Saskatchewan",
+            "YT" => "Yukon"
+        );
 
+        $states = array_merge($states, $canadian_states);
         foreach( $states as $abbr => $name ) {
             if ( preg_match( "/\b($name)\b/", ucwords( strtolower( $input ) ), $match ) )  {
                 if( 'abbr' == $format ){
@@ -177,6 +194,18 @@ class ZohoSyncDevices extends Command
     public function _fix_product_name($tag)
     {
         $check = strtolower($tag);
+
+        if (strpos($check, 'duetto') !== false OR $check == 'duetto mt evo') {
+            return 'Duetto MT EVO';
+        }
+        if (strpos($check, 'youlaser') !== false OR $check == 'youlaser mt') {
+            return 'YouLaser MT';
+        }
+
+        if (strpos($check, 'youlaser') !== false OR $check == 'youlaser mt') {
+            return 'Youlaser MT';
+        }
+
         if (strpos($check, 'denave') !== false) {
             return 'DenaVe';
         }
@@ -228,7 +257,6 @@ class ZohoSyncDevices extends Command
         if (strpos($check, 'vivace rf microneedling') !== false OR $check == 'vivace rf microneedling') {
             return 'RF Microneedling';
         }
-
         if (strpos($check, 'rf microneedling') !== false OR $check == 'rf microneedling') {
             return 'RF Microneedling';
         }
@@ -257,8 +285,9 @@ class ZohoSyncDevices extends Command
     }
     public function process_data($account, $data)
     {
+        if (isset($account->override) && $account->override == 1) return $account;
         $zipcodeRegex = '^\d{5}(?:[-\s]\d{4})?$^';
-        if (empty($data['Shipping_City']) && empty($data['Shipping_City']) && empty($data['Shipping_Code'])) {
+        if (empty($data['Shipping_City']) && empty($data['Shipping_State'])) {
             $street  = isset($data['Billing_Street']) ? $data['Billing_Street'] : '';
             $city    = isset($data['Billing_City']) ? $data['Billing_City'] : '';
             $state   = isset($data['Billing_State']) ? $data['Billing_State'] : '';
@@ -284,10 +313,9 @@ class ZohoSyncDevices extends Command
             $data['Website'] = 'https://' . $data['Website'];
         }
         $address = $street . ',' . $city . ' ' . $zipcode . ' ' . $country;
-//$geocode = $this->geocode($address);dump($geocode,$address);die;
 
         if (!isset($account->lat) OR empty($account->lat) OR !isset($account->lng) OR empty($account->lng)) {
-            $geocode = $this->geocode($address);
+            $geocode = geocode($address);
 
             $account->lat  = isset($geocode->lat) ? $geocode->lat : '';
             $account->lng  = isset($geocode->lng) ? $geocode->lng : '';
@@ -296,27 +324,35 @@ class ZohoSyncDevices extends Command
 
         $state = self::format_state($state, 'abbr');
         $account->name = $data['Account_Name'];
-        $account->street = is_null($street) ? '' : $street;
-        $account->zipcode = is_null($zipcode) ? '' : $zipcode;
-        $account->state = is_null($state) ? '' : $state;
-        $account->city  = is_null($city) ? '' : $city;
-        $account->country = is_null($country) ? '' : $ountry;
-        $account->website = is_null($data['Website']) ? '' : $data['Website'];
+        $account->street = is_null($street) ? $account->street : $street;
+        $account->zipcode = is_null($zipcode) ? $account->zipcode : $zipcode;
+        $account->state = is_null($state) ? $account->state : $state;
+        $account->city  = is_null($city) ? $account->city : $city;
+        $account->country = is_null($country) ? $account->country : $country;
+        $account->website = is_null($data['Website']) ? $account->website : $data['Website'];
 
-        $account->ZohoID = $data['ZohoID'];
-        $account->ZohoID = isset($data['ZohoID']) ? $data['ZohoID'] : null;
-        $account->delivery_date = isset($data['delivery_date']) ? $data['delivery_date'] : null;
-        $account->install_date = isset($data['install_date']) ? $data['install_date'] : null;
+        // $account->ZohoID = $data['ZohoID'];
+        $account->ZohoID = isset($data['ZohoID']) ? $data['ZohoID'] : $account->ZohoID;
+        $account->delivery_date = isset($data['delivery_date']) ? $data['delivery_date'] : $account->delivery_date;
+        $account->install_date = isset($data['install_date']) ? $data['install_date'] : $account->install_date;
 
-        $account->phone = isset($data['Phone']) ? $data['Phone'] : null;
-        $account->training_date = isset($data['training_date']) ? $data['training_date'] : null;
+        $account->phone = isset($data['Phone']) ? $data['Phone'] : $account->phone;
+        $account->training_date = isset($data['training_date']) ? $data['training_date'] : $account->training_date;
         $account->formatted_address = isset($geocode->formatted_address) ? $geocode->formatted_address : $account->formatted_address;
         if (!isset($account->formatted_address) OR empty($account->formatted_address)) {
             $account->formatted_address = $this->formatAddress($street, $city, $state, $zipcode, $country);
         }
-        $account->created_at = $data['created_at'];
-        $account->modified_at = $data['modified_at'];
+
+        if (!isset($account->zoho_sync_date) OR empty($account->zoho_sync_date)) {
+            $account->zoho_sync_date = Carbon::now();
+        }
+        $account->zoho_sync_date = $account->zoho_sync_date;
+        $account->zoho_created_at = $data['created_at'];
+        $account->zoho_modified_at = $data['modified_at'];
+        $account->active = isset($account->active) ? $account->active : 1;
+        $account->override = isset($account->override) ? $account->override : 0;
         $account->save();
+        return $account;
     }
     public function handle()
     {
@@ -337,21 +373,28 @@ class ZohoSyncDevices extends Command
         $userIdentifier = "brandon@southerntidemedia.com";
         $oAuthTokens = $oAuthClient->generateAccessTokenFromRefreshToken($refreshToken,$userIdentifier);
 
-        $climate = new \League\CLImate\CLImate;
+        //$climate = new \League\CLImate\CLImate;
+
         $moreRecords = true;
         $page = 1;
-        $accountsUpdated = $newAccount = 0;
+        $accountsUpdated = $newAccounts = 0;
         $fails = $updates = $skipped = $new = 0;
         $missingDate = 0;
         $errors = '';
 
-        $climate->lightGreen()->out('Fetching devices from ZohoCRM API.....');
-        $climate->lightGreen()->border('*', 40);
+        $this->info('Fetching devices from ZohoCRM API.....');
+        $border = '*';
+        for ($i=0; $i < 41; $i++) {
+            $border .= "*";
+        }
+        $border .= "*\n";
+        $this->info($border);
         $module = ZCRMModule::getInstance("Products_Sold");
         $newAccountAdded = $recordsArray = array();
         $badProducts = array();
         $badAccounts = array();
         $duplicates = 0;
+        $totalRecords = 0;
         while ($moreRecords != false) {
             try{
                 $params = array("page"=>$page, "per_page"=>200);
@@ -363,12 +406,15 @@ class ZohoSyncDevices extends Command
                 $page            = $info->getPageNo();
                 $numRecords      = $info->getRecordCount();
                 $page++;
-                $progress = $climate->progress()->total($numRecords);
+                //$progress = $climate->progress()->total($numRecords);
             } catch (ZCRMException $e) {
-                Bugsnag::notifyException($e);
+                Bugsnag::notifyException($e, function ($report) {
+                    $report->setSeverity('error');
+                });
             }
-
+            // $bar = $this->output->createProgressBar($totalRecords);
             foreach ($recordsArray as $record) {
+                // $bar->advance();
                 $data = $record->getData();
                 if (!isset($data['Customer']) OR !isset($data['Product'])) {
                     continue;
@@ -389,14 +435,17 @@ class ZohoSyncDevices extends Command
                     $accountData = $apiResponse->getData();
                     $name        = $accountData->getFieldValue("Account_Name");
                     if (strtolower($name) == 'cartessa aesthetics') continue;
-
+// if (strtolower($name) != 'trouvaille medspa') continue;
                     $apiResponse = ZCRMModule::getInstance('Products')->getRecord($DeviceID);
                     $productData = $apiResponse->getData();
                     $org         = $productData->getFieldValue("Product_Name");
-                    $climate->blue()->out('Product ' . $org . ' Customer ' . $name . ' ZohoID:' . $CustomerID);
+
+// dump($data, $accountData, $CustomerID, $DeviceID);
+// die;
+                    $this->info('Product ' . $org . ' Customer ' . $name . ' ZohoID:' . $CustomerID);
                     $tag         = $this->_fix_product_name($org);
                     if (!in_array($tag, $this->products)) {
-                        $climate->red()->out('Skipping product ' . $tag);
+                        $this->error('Skipping product ' . $tag);
                         $badProducts[] = $tag;
                         $badAccounts[] = $name;
                         continue;
@@ -416,7 +465,7 @@ class ZohoSyncDevices extends Command
                     } else {
                         $account = new Accounts;
                         $this->process_data($account,$theData);
-                        $newAccountAdded["{$CustomerID}"][] = $name;
+                        $newAccountAdded[$CustomerID][] = $name;
                         $newAccounts++;
                     }
                     $account->untag();
@@ -424,13 +473,21 @@ class ZohoSyncDevices extends Command
                         $this->tags[$CustomerID] = array();
                     }
                     if (isset($this->tags[$CustomerID]) && !in_array($tag, $this->tags[$CustomerID])) {
-                        $this->tags["{$CustomerID}"][] = $tag;
-                        $climate->info()->out("Customer Account:{$name} with Tag:{$tag}");
+                        $this->tags[$CustomerID][] = $tag;
+                        $this->info("Customer Account:{$name} with Tag:{$tag}");
                     } else {
                         $duplicates++;
                     }
                 } catch (ZCRMException $e) {
-                    Bugsnag::notifyException($e);
+                    Bugsnag::notifyException($e, function ($report) use ($CustomerID, $theData) {
+                        $report->setSeverity('error');
+                        $report->setMetaData([
+                            'ZohoData' => array(
+                                'CustomerID' => $CustomerID,
+                                'theData' => $theData,
+                            )
+                        ]);
+                    });
                 }
 
             }
@@ -443,7 +500,7 @@ class ZohoSyncDevices extends Command
                 foreach ($tags as &$tag) {
                     if ($tag == null || $tag == '') continue;
                     $products_found[] = $tag;
-                    $climate->info()->out("Tagging Account:{$key} with Tag:{$tag}");
+                    $this->info("Tagging Account:{$key} with Tag:{$tag}");
                     try {
                         $account->tag([$tags]);
                         $account->save();
@@ -452,46 +509,57 @@ class ZohoSyncDevices extends Command
                         $fails++;
                         $errors .= '<hr>ERROR:' . $account->id . ') ' . $e->getMessage . '<br>';
                         $errors .= 'TAGS: ' . $tags . '<br><hr>';
-                        Bugsnag::notifyException($e);
+                        Bugsnag::notifyException($e, function ($report) use ($CustomerID, $account, $key, $tag) {
+                            $report->setSeverity('error');
+                            $report->setMetaData([
+                                'ZohoData' => array(
+                                    'CustomerID' => $CustomerID,
+                                    'key' => $key,
+                                    'tag' => $tag,
+                                    'account' => $account,
+                                )
+                            ]);
+                        });
+
                     }
                 }
             }
 
         }
-        $padding = $climate->padding(10);
-        $padding->label('Updated')->result($updates);
+        // $bar->finish();
+        //$padding = $climate->padding(10);
+        //$accountHeaders = ['Updated Accounts', 'New Accounts', 'Missing Training Date', 'Tags Updated', 'Fails'];
+        //$accountResults = [$accountsUpdated, $newAccounts, $missingDate, $updates, $fails];
+        //$this->table($accountHeaders, $accountResults);
+        //$padding->label('Updated')->result($updates);
         $time_elapsed_secs = microtime(true) - $start;
         $time_elapsed_secs = $this->elapsed($time_elapsed_secs);
-        $padding->label('Time Completed in')->result($time_elapsed_secs);
+        $this->info('Time Completed in ' . $time_elapsed_secs);
+/*
+//        $products_found = (string) $this->fixArray($products_found);
+        $badProducts    = (string) $this->fixArray($badProducts);
+        $badAccounts    = (string) $this->fixArray($badAccounts);
+        $newAccountAdded = (string) $this->fixArray($newAccountAdded);
+*/
+        $products_found = $badProducts = $badAccounts = $newAccountAdded = 'disabled';
 
-        try {
-
-            $products_found = $this->fixArray($products_found);
-            $badProducts    = $this->fixArray($badProducts);
-            $badAccounts    = $this->fixArray($badAccounts);
-            $newAccountAdded = $this->fixArray($newAccountAdded);
-
-            $subject = 'ZohoSyncDevices completed at Cartessa';
-
-            $message = "
-            <h2>Syncing data complete</h2><p>
-            New Accounts Created {$newAccount}<br>
-            Accounts Updated {$accountsUpdated}<br>
-            Customer Duplicates {$duplicates}<br>
-            Missing Date {$missingDate}<br>
-            Tags Updated {$updates}<br><br>
-            Products Found: {$products_found}<br>
-            New Accounts Created: {$newAccountAdded}<br>
-            Bad Products Not Tagged: {$badProducts}<br>
-            Bad Accounts Not Tagged: {$badAccounts}<br>";
-            if ($errors ) {
-                $message .= $errors;
-            }
-            $message .= "<p>Completed in {$time_elapsed_secs}.</p>";
-        } catch (Exception $e) {
-            Bugsnag::notifyException($e);
-            return 'ERROR: ' . $e->getMessage();
+        $subject = 'ZohoSyncDevices completed at Cartessa';
+        $message = "
+        <h2>Syncing data complete</h2><p>
+        New Accounts Created {$newAccounts}<br>
+        Accounts Updated {$accountsUpdated}<br>
+        Customer Duplicates {$duplicates}<br>
+        Missing Date {$missingDate}<br>
+        Tags Updated {$updates}<br><br>";
+        /*
+        New Accounts Created: {$newAccountAdded}<br>
+        Bad Products Not Tagged: {$badProducts}<br>
+        Bad Accounts Not Tagged: {$badAccounts}<br>";
+        */
+        if ($errors ) {
+            $message .= $errors;
         }
+        $message .= "<p>Completed in {$time_elapsed_secs}.</p>";
         $headers = 'From: maps@cartessaaesthetics.com' . "\r\n" .
                    'Reply-To: ithippyshawn@gmail.com' . "\r\n" .
                    'X-Mailer: PHP/' . phpversion();
@@ -533,7 +601,12 @@ class ZohoSyncDevices extends Command
                 $myvalue = unserialize($myvalue);
             }
         } catch (Exception $e) {
-            Bugsnag::notifyException($e);
+            Bugsnag::notifyException($e, function ($report) use ($myArray) {
+                $report->setSeverity('error');
+                $report->setMetaData([
+                    '$myArray' => $myArray
+                ]);
+            });
             return 'ERROR: ' . $e->getMessage();
         }
 

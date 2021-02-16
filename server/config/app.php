@@ -255,6 +255,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Mailjet' => Mailjet\LaravelMailjet\Facades\Mailjet::class,
         'Bugsnag' => Bugsnag\BugsnagLaravel\Facades\Bugsnag::class,
+        'Carbon' => Carbon\Carbon::class,
     ],
 ];
-

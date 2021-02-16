@@ -34,6 +34,15 @@ return [
                 'main' => 'Users',
                 'view' => 'View User',
             ],
+            'accounts' => [
+                'all' => 'All Accounts',
+                'create' => 'Create Account',
+                'deactivated' => 'Deactivated Accounts',
+                'deleted' => 'Deleted Accounts',
+                'edit' => 'Edit Accounts',
+                'main' => 'Accounts',
+                'view' => 'View Accounts',
+            ],
         ],
 
         'log-viewer' => [
@@ -59,29 +68,7 @@ return [
          * Be sure to add the new language in alphabetical order.
          */
         'langs' => [
-            'ar' => 'Arabic',
-            'az' => 'Azerbaijan',
-            'zh' => 'Chinese Simplified',
-            'zh-TW' => 'Chinese Traditional',
-            'da' => 'Danish',
-            'de' => 'German',
-            'el' => 'Greek',
             'en' => 'English',
-            'es' => 'Spanish',
-            'fa' => 'Persian',
-            'fr' => 'French',
-            'he' => 'Hebrew',
-            'id' => 'Indonesian',
-            'it' => 'Italian',
-            'ja' => 'Japanese',
-            'nl' => 'Dutch',
-            'no' => 'Norwegian',
-            'pt_BR' => 'Brazilian Portuguese',
-            'ru' => 'Russian',
-            'sv' => 'Swedish',
-            'th' => 'Thai',
-            'tr' => 'Turkish',
-            'uk' => 'Ukrainian',
         ],
     ],
 ];

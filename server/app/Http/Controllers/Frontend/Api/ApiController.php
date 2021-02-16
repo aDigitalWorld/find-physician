@@ -19,6 +19,10 @@ class ApiController extends Controller
     public function fixProduct($product='')
     {
         $fix = array(
+
+            'duetto-mt-evo' => 'Duetto MT EVO (Canada Only)',
+            'domino-evo'    => 'Domino EVO (Canada Only)',
+            'youLaser-mt'   => 'YouLaser MT (Canada Only)',
             'Denave' => 'DenaVe',
             'Discovery Pico' => 'Discovery Pico',
             'Evo Series' => 'EVO Series',
@@ -66,12 +70,13 @@ class ApiController extends Controller
             if ($tag == 'rf-microneedling') {
                 $tagSearch = array('rf-microneedling', 'virtue-rf');
             }
-            $accounts = Accounts::complete()->withAnyTag($tagSearch)->get();
+            $accounts = Accounts::complete()->active()->withAnyTag($tagSearch)->get();
         } else {
-            $accounts = Accounts::complete()->with('tagged')->get();
+            $accounts = Accounts::complete()->active()->with('tagged')->get();
         }
-        foreach ($accounts as $row) {
+        foreach ($accounts as &$row) {
             $row->tagged = $row->tagged;
+            $row->formatted_address = formatAddress($row);
         }
 
         $accounts = $accounts->values();
@@ -93,6 +98,9 @@ class ApiController extends Controller
              $row->tagged = $row->tagged;
          }
          if (!$tag) {
+            foreach ($result as $key => &$row) {
+                $row->formatted_address = formatAddress($row);
+            }
             $result = $result->values();
             return response()->json($result)->setStatusCode(200)->header('Content-Type', 'application/json');
         }
@@ -108,6 +116,9 @@ class ApiController extends Controller
             return false;
         });
 
+        foreach ($filtered as $key => &$row) {
+            $row->formatted_address = formatAddress($row);
+        }
         $filtered = $filtered->values();
         return response()->json($filtered)->setStatusCode(200)->header('Content-Type', 'application/json');
     }
@@ -133,13 +144,10 @@ class ApiController extends Controller
         return $oAuthTokens = $oAuthClient->generateAccessTokenFromRefreshToken($refreshToken,$userIdentifier);
     }
 
-    public function download(Request $request)
+    public function download()
     {
         $csv = 'Account, Device Name, Training Date, Street, City, State, Zipcode, Country, Lat, Lng' . PHP_EOL;
-        $csv = 'Account, Device Name, Training Date, Formatted Address, Street, City, State, Zipcode, Country, Lat, Lng' . PHP_EOL;
-        $auth = $request->get('auth', false);
-
-        if (!$auth OR $auth != 'erin gobragh') die('no access');
+        $csv = 'ZohoID, Account, Device Name, Training Date, Formatted Address, Street, City, State, Zipcode, Country, Active, Lat, Lng' . PHP_EOL;
 
         $accounts = Accounts::complete()->with('tagged')->get()->toArray();
 //        $accounts = Accounts::complete()->with('tagged')->get();
@@ -152,14 +160,16 @@ class ApiController extends Controller
                 $account['city']  = is_null($account['city']) ? '' : $account['city'];
                 $account['country'] = is_null($account['country']) ? '' : $account['country'];
                 $account['name'] = str_replace(',', '', $account['name']);
+                $account['active'] = (isset($account['active']) && $account['active'] == 1) ? 'ACTIVE' : 'INACTIVE';
+                $account['ZohoID'] = isset($account['ZohoID']) && !empty($account['ZohoID']) ? $account['ZohoID'] : '';
                 if (strlen($account['zipcode']) == 4) {
                     $account['zipcode'] = '0'.$account['zipcode'];
                 }
 
                 $device = $this->fixProduct($tagged['tag_name']);
-                $csv .= vsprintf('"%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s"', array(
-                    $account['name'], $device, $account['training_date'], $account['formatted_address'], $account['street'],
-                    $account['city'], $account['state'], $account['zipcode'], $account['country'], $account['lat'],
+                $csv .= vsprintf('"%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s"', array(
+                    $account['ZohoID'], $account['name'], $device, $account['training_date'], $account['formatted_address'], $account['street'],
+                    $account['city'], $account['state'], $account['zipcode'], $account['country'], $account['active'], $account['lat'],
                     $account['lng']
                 )) . PHP_EOL;
 //                $csv .= '"'.$account['name'] . '", ' . $device . ', ' . $account['training_date'] . ', ' . $account['street'] . ', ' . $account['city'] . ', ' . $account['state'] . ', ' . $account['zipcode'] . ', ' . $account['country'] . ', ' . $account['lat'] . ', ' . $account['lng'] . PHP_EOL;
@@ -169,4 +179,3 @@ class ApiController extends Controller
     }
 
 }
-

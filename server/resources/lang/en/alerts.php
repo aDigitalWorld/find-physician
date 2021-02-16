@@ -19,6 +19,20 @@ return [
             'updated' => 'The role was successfully updated.',
         ],
 
+        'accounts' => [
+            'cant_resend_confirmation' => 'The application is currently set to manually approve accounts.',
+            'confirmation_email' => 'A new confirmation e-mail has been sent to the address on file.',
+            'confirmed' => 'The account was successfully confirmed.',
+            'created' => 'The account was successfully created.',
+            'deleted' => 'The account was successfully deleted.',
+            'deleted_permanently' => 'The account was deleted permanently.',
+            'restored' => 'The account was successfully restored.',
+            'session_cleared' => "The account's session was successfully cleared.",
+            'social_deleted' => 'Social Account Successfully Removed',
+            'unconfirmed' => 'The account was successfully un-confirmed',
+            'updated' => 'The account was successfully updated.',
+            'updated_password' => "The account's password was successfully updated.",
+        ],
         'users' => [
             'cant_resend_confirmation' => 'The application is currently set to manually approve users.',
             'confirmation_email' => 'A new confirmation e-mail has been sent to the address on file.',

@@ -7,8 +7,41 @@ use App\Http\Controllers\Backend\Auth\User\UserStatusController;
 use App\Http\Controllers\Backend\Auth\User\UserSessionController;
 use App\Http\Controllers\Backend\Auth\User\UserPasswordController;
 use App\Http\Controllers\Backend\Auth\User\UserConfirmationController;
-
+use App\Http\Controllers\Backend\Accounts\AccountsController;
+use App\Http\Controllers\Backend\Accounts\AccountsStatusController;
 // All route names are prefixed with 'admin.auth'.
+
+// Role Management
+Route::group([
+    'namespace' => 'Accounts',
+    'middleware' => 'role:client|administrator',
+], function () {
+    Route::get('accounts', [AccountsController::class, 'index'])->name('accounts.index');
+    Route::get('accounts/start-sync', [AccountsController::class, 'startSync'])->name('accounts.start_sync');
+    // Route::post('accounts/accountsList','AccountsController@accountsList')->name('accounts.list');
+    Route::post('accounts/accountsList', [AccountsController::class, 'accountsList'])->name('accounts.list');
+    Route::get('accounts/create', [AccountsController::class, 'create'])->name('accounts.create');
+    Route::post('accounts', [AccountsController::class, 'store'])->name('accounts.store');
+
+
+    Route::get('accounts/deactivated', [AccountsStatusController::class, 'getDeactivated'])->name('accounts.deactivated');
+    Route::get('accounts/deleted', [AccountsStatusController::class, 'getDeleted'])->name('account.deleted');
+    Route::group(['prefix' => 'accounts/{account}'], function () {
+
+        Route::get('/', [AccountsController::class, 'show'])->name('account.show');
+        Route::get('edit', [AccountsController::class, 'edit'])->name('account.edit');
+        Route::patch('/', [AccountsController::class, 'update'])->name('account.update');
+        Route::delete('/', [AccountsController::class, 'destroy'])->name('account.destroy');
+
+        // Deleted
+        Route::get('delete', [AccountsStatusController::class, 'delete'])->name('account.delete-permanently');
+        Route::get('restore', [AccountsStatusController::class, 'restore'])->name('account.restore');
+
+        Route::get('mark/{status}', [AccountsStatusController::class, 'mark'])->name('account.mark')->where(['status' => '[0,1]']);
+    });
+
+});
+
 Route::group([
     'prefix' => 'auth',
     'as' => 'auth.',
@@ -72,4 +105,5 @@ Route::group([
             Route::delete('/', [RoleController::class, 'destroy'])->name('role.destroy');
         });
     });
+
 });

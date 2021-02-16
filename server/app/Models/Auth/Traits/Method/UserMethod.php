@@ -77,6 +77,14 @@ trait UserMethod
     }
 
     /**
+     * @return mixed
+     */
+    public function isClient()
+    {
+        return $this->hasRole('client');
+    }
+
+    /**
      * @return bool
      */
     public function isActive()

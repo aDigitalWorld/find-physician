@@ -43,6 +43,7 @@ return [
 
                 'table' => [
                     'number_of_users' => 'Number of Users',
+                    'number_of_accounts' => 'Number of Accounts',
                     'permissions' => 'Permissions',
                     'role' => 'Role',
                     'sort' => 'Sort',
@@ -110,6 +111,69 @@ return [
                 ],
 
                 'view' => 'View User',
+            ],
+
+
+            'accounts' => [
+                'active' => 'Active Accounts',
+                'all_permissions' => 'All Permissions',
+                'change_password' => 'Change Password',
+                'change_password_for' => 'Change Password for :account',
+                'create' => 'Create Account',
+                'deactivated' => 'Deactivated Accounts',
+                'deleted' => 'Deleted Accounts',
+                'edit' => 'Edit Account',
+                'management' => 'Account Management',
+                'no_permissions' => 'No Permissions',
+                'no_roles' => 'No Roles to set.',
+                'permissions' => 'Permissions',
+                'account_actions' => 'Account Actions',
+
+                'table' => [
+                    'confirmed' => 'Confirmed',
+                    'created' => 'Created',
+                    'email' => 'E-mail',
+                    'id' => 'ID',
+                    'last_updated' => 'Last Updated',
+                    'name' => 'Name',
+                    'first_name' => 'First Name',
+                    'last_name' => 'Last Name',
+                    'no_deactivated' => 'No Deactivated Accounts',
+                    'no_deleted' => 'No Deleted Accounts',
+                    'other_permissions' => 'Other Permissions',
+                    'permissions' => 'Permissions',
+                    'abilities' => 'Abilities',
+                    'roles' => 'Roles',
+                    'social' => 'Social',
+                    'total' => 'account total|accounts total',
+                ],
+
+                'tabs' => [
+                    'titles' => [
+                        'overview' => 'Overview',
+                        'history' => 'History',
+                    ],
+
+                    'content' => [
+                        'overview' => [
+                            'avatar' => 'Avatar',
+                            'confirmed' => 'Confirmed',
+                            'created_at' => 'Created At',
+                            'deleted_at' => 'Deleted At',
+                            'email' => 'E-mail',
+                            'last_login_at' => 'Last Login At',
+                            'last_login_ip' => 'Last Login IP',
+                            'last_updated' => 'Last Updated',
+                            'name' => 'Name',
+                            'first_name' => 'First Name',
+                            'last_name' => 'Last Name',
+                            'status' => 'Status',
+                            'timezone' => 'Timezone',
+                        ],
+                    ],
+                ],
+
+                'view' => 'View Account',
             ],
         ],
     ],

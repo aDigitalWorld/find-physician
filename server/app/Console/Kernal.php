@@ -16,8 +16,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\ZohoSync',
-        'App\Console\Commands\ZohoRemoveTags',
+        'App\Console\Commands\ZohoDelete',
         'App\Console\Commands\ZohoSyncDevices'
     ];
 
@@ -29,7 +28,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
 //        $schedule->command('zoho:sync')->dailyAt('01:00')->timezone('America/New_York')->emailOutputTo(env('DEBUG_EMAIL'));
-        $schedule->command('zoho:syncDevices')->dailyAt('12:00')->timezone('America/New_York')->emailOutputTo(env('DEBUG_EMAIL'));
+        $schedule->command('zoho:syncDevices')->dailyAt('2:00')->timezone('America/New_York')->emailOutputTo(env('DEBUG_EMAIL'));
     }
 
     /**
@@ -42,4 +41,3 @@ class Kernel extends ConsoleKernel
         require base_path('routes/console.php');
     }
 }
-

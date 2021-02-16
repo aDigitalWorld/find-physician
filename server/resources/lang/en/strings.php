@@ -14,6 +14,13 @@ return [
 
     'backend' => [
         'access' => [
+            'accounts' => [
+                'delete_account_confirm' => 'Are you sure you want to delete this account permanently? Anywhere in the application that references this account\'s id will most likely error. Proceed at your own risk. This can not be un-done.',
+                'if_confirmed_off' => '(If confirmed is off)',
+                'no_deactivated' => 'There are no deactivated accounts.',
+                'no_deleted' => 'There are no deleted accounts.',
+                'restore_account_confirm' => 'Restore this account to its original state?',
+            ],
             'users' => [
                 'delete_user_confirm' => 'Are you sure you want to delete this user permanently? Anywhere in the application that references this user\'s id will most likely error. Proceed at your own risk. This can not be un-done.',
                 'if_confirmed_off' => '(If confirmed is off)',

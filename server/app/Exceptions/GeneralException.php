@@ -32,7 +32,9 @@ class GeneralException extends Exception
      */
     public function report()
     {
-        //
+        Bugsnag::notifyException($e, function ($report) {
+            $report->setSeverity('error');
+        });
     }
 
     /**

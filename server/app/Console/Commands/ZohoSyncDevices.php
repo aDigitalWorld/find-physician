@@ -300,7 +300,7 @@ class ZohoSyncDevices extends Command
         $account->zipcode = is_null($zipcode) ? '' : $zipcode;
         $account->state = is_null($state) ? '' : $state;
         $account->city  = is_null($city) ? '' : $city;
-        $account->country = is_null($country) ? '' : $country;
+        $account->country = is_null($country) ? '' : $ountry;
         $account->website = is_null($data['Website']) ? '' : $data['Website'];
 
         $account->ZohoID = $data['ZohoID'];
@@ -464,27 +464,34 @@ class ZohoSyncDevices extends Command
         $time_elapsed_secs = $this->elapsed($time_elapsed_secs);
         $padding->label('Time Completed in')->result($time_elapsed_secs);
 
-        $products_found = $this->fixArray($products_found);
-        $badProducts    = $this->fixArray($badProducts);
-        $badAccounts    = $this->fixArray($badAccounts);
-        $newAccountAdded = $this->fixArray($newAccountAdded);
+        try {
 
-        $subject = 'ZohoSyncDevices completed at Cartessa';
-        $message = "
-        <h2>Syncing data complete</h2><p>
-        New Accounts Created {$newAccount}<br>
-        Accounts Updated {$accountsUpdated}<br>
-        Customer Duplicates {$duplicates}<br>
-        Missing Date {$missingDate}<br>
-        Tags Updated {$updates}<br><br>
-        Products Found: {$products_found}<br>
-        New Accounts Created: {$newAccountAdded}<br>
-        Bad Products Not Tagged: {$badProducts}<br>
-        Bad Accounts Not Tagged: {$badAccounts}<br>";
-        if ($errors ) {
-            $message .= $errors;
+            $products_found = $this->fixArray($products_found);
+            $badProducts    = $this->fixArray($badProducts);
+            $badAccounts    = $this->fixArray($badAccounts);
+            $newAccountAdded = $this->fixArray($newAccountAdded);
+
+            $subject = 'ZohoSyncDevices completed at Cartessa';
+
+            $message = "
+            <h2>Syncing data complete</h2><p>
+            New Accounts Created {$newAccount}<br>
+            Accounts Updated {$accountsUpdated}<br>
+            Customer Duplicates {$duplicates}<br>
+            Missing Date {$missingDate}<br>
+            Tags Updated {$updates}<br><br>
+            Products Found: {$products_found}<br>
+            New Accounts Created: {$newAccountAdded}<br>
+            Bad Products Not Tagged: {$badProducts}<br>
+            Bad Accounts Not Tagged: {$badAccounts}<br>";
+            if ($errors ) {
+                $message .= $errors;
+            }
+            $message .= "<p>Completed in {$time_elapsed_secs}.</p>";
+        } catch (Exception $e) {
+            Bugsnag::notifyException($e);
+            return 'ERROR: ' . $e->getMessage();
         }
-        $message .= "<p>Completed in {$time_elapsed_secs}.</p>";
         $headers = 'From: maps@cartessaaesthetics.com' . "\r\n" .
                    'Reply-To: ithippyshawn@gmail.com' . "\r\n" .
                    'X-Mailer: PHP/' . phpversion();
@@ -543,4 +550,3 @@ class ZohoSyncDevices extends Command
         return "{$hours} {$minutes} {$seconds}";
     }
 }
-
